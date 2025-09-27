@@ -11,6 +11,9 @@ local default_config = {
         auto_detect = true,       -- Auto-detect Sail usage in project
         url = 'http://localhost', -- URL to open when using SailOpen command
     },
+    ui = {
+        use_snacks = true,        -- Use snacks.nvim for enhanced UI when available
+    },
 }
 
 -- Global state
@@ -60,7 +63,8 @@ function M.setup(config)
 
         -- Show notification if enabled
         if config.notifications then
-            vim.notify("Laravel.nvim: Laravel project detected at " .. project_root, vim.log.levels.INFO)
+            local ui = require('laravel.ui')
+            ui.info("Laravel project detected at " .. project_root)
         end
 
         -- Setup modules only if in Laravel project
@@ -82,7 +86,8 @@ function M.setup(config)
         _G.laravel_nvim.is_laravel_project = false
         -- Show non-Laravel notification if enabled
         if config.notifications then
-            vim.notify("Laravel.nvim: Not in Laravel project - components not loaded", vim.log.levels.INFO)
+            local ui = require('laravel.ui')
+            ui.warn("Not in Laravel project - components not loaded")
         end
     end
 
@@ -100,7 +105,8 @@ function M.setup(config)
         -- Expand path and check if it exists
         new_root = vim.fn.expand(new_root)
         if vim.fn.isdirectory(new_root) == 0 then
-            vim.notify('Directory does not exist: ' .. new_root, vim.log.levels.ERROR)
+            local ui = require('laravel.ui')
+            ui.error('Directory does not exist: ' .. new_root)
             return
         end
 
@@ -122,13 +128,15 @@ function M.setup(config)
                 if input and (input:lower() == 'y' or input:lower() == 'yes') then
                     _G.laravel_nvim.project_root = new_root
                     _G.laravel_nvim.is_laravel_project = true
-                    vim.notify('Laravel project root set to: ' .. new_root, vim.log.levels.INFO)
+                    local ui = require('laravel.ui')
+                    ui.info('Laravel project root set to: ' .. new_root)
                 end
             end)
         else
             _G.laravel_nvim.project_root = new_root
             _G.laravel_nvim.is_laravel_project = true
-            vim.notify('Laravel project root set to: ' .. new_root, vim.log.levels.INFO)
+            local ui = require('laravel.ui')
+            ui.info('Laravel project root set to: ' .. new_root)
         end
     end, {
         nargs = '?',

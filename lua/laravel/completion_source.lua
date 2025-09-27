@@ -216,17 +216,16 @@ function M.setup()
     if ok then
         cmp.register_source('laravel', source)
 
-        -- Don't override existing cmp config, just register our source
-        -- Users need to add { name = 'laravel' } to their cmp sources manually
-        vim.notify('Laravel completions registered with nvim-cmp. Add { name = "laravel" } to your cmp sources.',
-            vim.log.levels.INFO)
+        local ui = require('laravel.ui')
+        ui.info('Laravel completions registered with nvim-cmp. Add { name = "laravel" } to your cmp sources.')
     else
         -- Fallback: manual completion using omnifunc
         vim.api.nvim_create_autocmd('FileType', {
             pattern = { 'php', 'blade' },
             callback = function()
                 vim.bo.omnifunc = 'v:lua.require("laravel.completion_source").omnifunc'
-                vim.notify('Laravel completions set up via omnifunc. Use <C-x><C-o> to trigger.', vim.log.levels.INFO)
+                local ui = require('laravel.ui')
+                ui.info('Laravel completions set up via omnifunc. Use <C-x><C-o> to trigger.')
             end,
         })
     end

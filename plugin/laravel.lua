@@ -78,12 +78,14 @@ local function initialize_laravel()
 
         -- Only show notifications if setup() has been called and notifications are enabled
         if _G.laravel_nvim.setup_called and _G.laravel_nvim.config and _G.laravel_nvim.config.notifications then
-            vim.notify("Laravel.nvim: Laravel project detected at " .. root, vim.log.levels.INFO)
+            local ui = require('laravel.ui')
+            ui.info("Laravel project detected at " .. root)
         end
     else
         -- Only show notifications if setup() has been called and notifications are enabled
         if _G.laravel_nvim.setup_called and _G.laravel_nvim.config and _G.laravel_nvim.config.notifications then
-            vim.notify("Laravel.nvim: Not in Laravel project - components not loaded", vim.log.levels.INFO)
+            local ui = require('laravel.ui')
+            ui.warn("Not in Laravel project - components not loaded")
         end
     end
 end
@@ -153,7 +155,8 @@ local function setup_commands()
     -- Artisan command (always available)
     vim.api.nvim_create_user_command('Artisan', function(opts)
         if not is_in_laravel_project() then
-            vim.notify('Not in a Laravel project', vim.log.levels.ERROR)
+            local ui = require('laravel.ui')
+            ui.error('Not in a Laravel project')
             return
         end
         require('laravel.artisan').run_command(opts.args)

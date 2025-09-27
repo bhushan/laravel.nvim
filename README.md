@@ -273,6 +273,8 @@ The service provider automatically integrates with Laravel's VarDumper component
     dependencies = {
         "MunifTanjim/nui.nvim",
         "nvim-lua/plenary.nvim",
+        -- Optional: for enhanced UI experience
+        { "folke/snacks.nvim", optional = true },
     },
     keys = {
         { "<leader>la", ":Artisan<cr>", desc = "Laravel Artisan" },
@@ -294,6 +296,8 @@ use {
     requires = {
         "MunifTanjim/nui.nvim",
         "nvim-lua/plenary.nvim",
+        -- Optional: for enhanced UI experience
+        { "folke/snacks.nvim", opt = true },
     },
     config = function()
         require("laravel").setup()
@@ -336,6 +340,9 @@ require("laravel").setup({
         enabled = true,           -- Enable/disable Laravel Sail integration (default: true)
         auto_detect = true,       -- Auto-detect Sail usage in project (default: true)
     },
+    ui = {
+        use_snacks = true,        -- Use snacks.nvim for enhanced UI when available (default: true)
+    },
 })
 ```
 
@@ -348,6 +355,7 @@ require("laravel").setup({
 | `keymaps`          | `boolean` | `true`  | Enable/disable Laravel.nvim default keymaps              |
 | `sail.enabled`     | `boolean` | `true`  | Enable/disable Laravel Sail integration                  |
 | `sail.auto_detect` | `boolean` | `true`  | Auto-detect Sail usage and wrap commands                 |
+| `ui.use_snacks`    | `boolean` | `true`  | Use snacks.nvim for enhanced UI when available           |
 
 ### Examples
 
@@ -384,6 +392,41 @@ When Sail is detected in your project (presence of `docker-compose.yml` and `ven
 - `:Composer install` becomes `./vendor/bin/sail composer install`
 
 **All Laravel commands (including Sail commands) work globally** - you can run them from any file type (JavaScript, CSS, Markdown, etc.) within a Laravel project, not just PHP files.
+
+### ✨ Enhanced UI with snacks.nvim Integration
+
+Laravel.nvim seamlessly integrates with [snacks.nvim](https://github.com/folke/snacks.nvim) when available, providing an enhanced user experience through **automatic UI overrides**:
+
+#### How It Works
+
+When you enable snacks.nvim modules in your configuration, Laravel.nvim automatically benefits:
+
+```lua
+{
+  "folke/snacks.nvim",
+  opts = {
+    notifier = { enabled = true, timeout = 3000 },  -- Enhances vim.notify
+    input = { enabled = true },                     -- Enhances vim.ui.input
+    picker = { enabled = true },                    -- Enhances vim.ui.select
+  }
+}
+```
+
+**Laravel.nvim uses standard Neovim APIs** (`vim.notify`, `vim.ui.select`, `vim.ui.input`) - snacks.nvim automatically enhances these when enabled.
+
+#### 🎨 Enhanced Features (When Snacks Modules Enabled)
+
+- **Rich notifications** with better formatting, timeout management, and history
+- **Enhanced pickers** with fuzzy search for Artisan commands, Composer packages, and Laravel resources
+- **Better input dialogs** with improved styling and validation
+- **Floating terminals** for Laravel/Sail commands (when explicitly requested)
+- **Enhanced floating windows** with backdrop support and better styling
+
+#### 🔄 Seamless Fallback
+
+- **No configuration needed** - Laravel.nvim works perfectly without snacks.nvim
+- **Progressive enhancement** - features improve automatically when snacks.nvim is available
+- **Zero breaking changes** - existing functionality remains identical
 
 **Enable Laravel IDE Helper integration:**
 
